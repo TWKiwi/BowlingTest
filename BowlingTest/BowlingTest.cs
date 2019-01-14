@@ -13,7 +13,18 @@ namespace BowlingTest
 
             bowling.Roll(1);
 
-            Assert.AreEqual(1, bowling.Score());
+            Assert.AreEqual(0, bowling.Score());
+        }
+
+        [TestMethod]
+        public void RollTwoBalls_NoStrikeAndSpire_FramesCountShouldBeOne()
+        {
+            var bowling = new Bowling();
+
+            bowling.Roll(3);
+            bowling.Roll(1);
+
+            Assert.AreEqual(4, bowling.Score());
         }
     }
 }
