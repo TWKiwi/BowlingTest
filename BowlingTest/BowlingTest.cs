@@ -77,6 +77,19 @@ namespace BowlingTest
             Assert.AreEqual(49, _bowling.Score());
         }
 
+        [TestMethod]
+        public void RollTwentyBalls_HasTwoSpire()
+        {
+            SetRollHistory(new List<int>()
+            {
+                3,1,3,7,3,1,3,1,3,1,3,7,3,1,3,1,3,1,3,1,
+            });
+
+            RollBalls(_rollHistory);
+
+            Assert.AreEqual(58, _bowling.Score());
+        }
+
         private void SetRollHistory(List<int> dictionary)
         {
             _rollHistory = dictionary;
