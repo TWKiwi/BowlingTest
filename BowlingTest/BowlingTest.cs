@@ -8,7 +8,7 @@ namespace BowlingTest
     {
         [TestMethod]
         public void RollOneBall_NoStrikeAndSpire()
-        {
+        { 
             var bowling = new Bowling();
 
             bowling.Roll(1);
