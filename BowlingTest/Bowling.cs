@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace BowlingTest
 {
     public class Bowling
     {
-        private int _score;
         private int _ballsCount;
         private int _framesCount;
         public List<Frame> Frames = new List<Frame>();
-        
+        private int _tempTotalScore;
 
         public Bowling()
         {
@@ -23,26 +21,36 @@ namespace BowlingTest
         public void Roll(int score)
         {
             _ballsCount++;
-            IsNewFram();
-            Frames[_framesCount].Score += score;
+            NewFrameCounter();
+            _tempTotalScore += score;
+            if (!IsNewFrame())
+            {
+                Frames[_framesCount - 1].Score += _tempTotalScore;
+            }
         }
 
-        private void IsNewFram()
+        private void NewFrameCounter()
         {
-            if (_ballsCount % 2 == 0)
+            if (IsNewFrame())
             {
+                _tempTotalScore = 0;
                 _framesCount++;
             }
         }
 
-        public int Score()
+        private bool IsNewFrame()
         {
-            return _framesCount == 0 ? 0 : ComputeScore();
+            return _ballsCount % 2 == 1;
         }
 
-        private int ComputeScore()
+        private int UpdateTotalScore()
         {
             return Frames.Sum(x => x.Score);
+        }
+
+        public int Score()
+        {
+            return UpdateTotalScore();
         }
     }
 
