@@ -4,14 +4,16 @@ namespace BowlingTest
 {
     public class Bowling
     {
+        private int _score;
+
         public void Roll(int score)
         {
-            throw new NotImplementedException();
+            _score += score;
         }
 
         public int Score()
         {
-            throw new NotImplementedException();
+            return _score;
         }
     }
 }
