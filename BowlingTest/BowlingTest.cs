@@ -3,28 +3,65 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BowlingTest
 {
+    
+
     [TestClass]
     public class BowlingTest
     {
+        private readonly Bowling _bowling = new Bowling();
+
+        private List<int> _rollHistory = new List<int>();
+
         [TestMethod]
         public void RollOneBall_NoStrikeAndSpire()
-        { 
-            var bowling = new Bowling();
+        {
+            SetRollHistory(new List<int>()
+            {
+                1,
+            });
 
-            bowling.Roll(1);
+            RollBalls(_rollHistory);
 
-            Assert.AreEqual(0, bowling.Score());
+            Assert.AreEqual(0, _bowling.Score());
         }
 
         [TestMethod]
         public void RollTwoBalls_NoStrikeAndSpire_FramesCountShouldBeOne()
         {
-            var bowling = new Bowling();
+            SetRollHistory(new List<int>()
+            {
+                3,1,
+            });
 
-            bowling.Roll(3);
-            bowling.Roll(1);
+            RollBalls(_rollHistory);
 
-            Assert.AreEqual(4, bowling.Score());
+            Assert.AreEqual(4, _bowling.Score());
+        }
+
+        [TestMethod]
+        public void RollTwentyBalls_NoStrikeAndSpire_FramesCountShouldBeTen()
+        {
+            SetRollHistory(new List<int>()
+            {
+                3,1 ,3,1 ,3,1 ,3,1 ,3,1 ,3,1 ,3,1 ,3,1 ,3,1 ,3,1,
+            });
+
+            RollBalls(_rollHistory);
+
+            Assert.AreEqual(40, _bowling.Score());
+        }
+
+        private void SetRollHistory(List<int> dictionary)
+        {
+            _rollHistory = dictionary;
+        }
+
+        private void RollBalls(List<int> rollHistory)
+        {
+            foreach (var score in rollHistory)
+            {
+                _bowling.Roll(score);
+            }
         }
     }
 }
