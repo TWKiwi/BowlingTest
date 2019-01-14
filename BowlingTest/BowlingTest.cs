@@ -95,12 +95,12 @@ namespace BowlingTest
         {
             SetRollHistory(new List<int>()
             {
-                3,7,3,7,3,7,3,1,3,1
+                3,7,3,7,3,7,3,1,3,1,3,7,3,1,3,1,3,1,3,1,
             });
 
             RollBalls(_rollHistory);
 
-            Assert.AreEqual(47, _bowling.Score());
+            Assert.AreEqual(76, _bowling.Score());
         }
 
         private void SetRollHistory(List<int> dictionary)
