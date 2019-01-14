@@ -10,6 +10,7 @@ namespace BowlingTest
         public List<Frame> Frames = new List<Frame>();
         private int _tempTotalScore;
         private int _spireBonusTimes;
+        public int CurrentFrameIndex => _framesCount - 1;
 
         public Bowling()
         {
@@ -27,26 +28,27 @@ namespace BowlingTest
             HasSpireBonus(score);
             if (!IsNewFrame())
             {
-                Frames[_framesCount - 1].Score += _tempTotalScore;
+                Frames[CurrentFrameIndex].Score += _tempTotalScore;
+                if (IsSpire())
+                {
+                    _spireBonusTimes++;
+                }
             }
-            if (IsSpire())
-            {
-                _spireBonusTimes++;
-            }
+            
         }
 
         private void HasSpireBonus(int score)
         {
             if (_spireBonusTimes>0)
             {
-                Frames[_framesCount - 1].Score += score;
+                Frames[CurrentFrameIndex - 1].Score += score;
                 _spireBonusTimes--;
             }
         }
 
         private bool IsSpire()
         {
-            return Frames[_framesCount - 1].Score == 10;
+            return Frames[CurrentFrameIndex].Score == 10;
         }
 
         private void NewFrameCounter()
