@@ -78,29 +78,24 @@ namespace BowlingTest
 
         private void IsReachTheUpperLimit()
         {
-            if (CurrentFrameIndex >= 10 && HaveSpireBonus())
+            if (CurrentFrameIndex >= 10 && HaveBonusChance())
             {
                 _isFrameBonus = true;
             }
-            else if (CurrentFrameIndex >= 10 && NoSpireBonus() && NoStrikeBonus())
+            else if (CurrentFrameIndex >= 10 && NoBonusChance())
             {
                 _youHaveNoChance = true;
             }
         }
 
-        private bool NoStrikeBonus()
+        private bool NoBonusChance()
         {
-            return Frames.Any(x => x.StrikeBonusTimes < 0);
+            return Frames.Any(x => x.SpireBonusTimes < 0 && x.StrikeBonusTimes < 0);
         }
 
-        private bool NoSpireBonus()
+        private bool HaveBonusChance()
         {
-            return Frames.Any(x => x.SpireBonusTimes < 0);
-        }
-
-        private bool HaveSpireBonus()
-        {
-            return Frames.Any(x => x.SpireBonusTimes > 0);
+            return Frames.Any(x => x.SpireBonusTimes > 0 || x.StrikeBonusTimes > 0);
         }
 
         private void FrameCompleted()
@@ -134,7 +129,7 @@ namespace BowlingTest
 
         private void SetUpCounter()
         {
-            _isFirstBall = !_isFirstBall;
+            _isFirstBall = !_isFirstBall || _isFrameBonus;
         }
 
         private void SpireBonusProcess(int score)
