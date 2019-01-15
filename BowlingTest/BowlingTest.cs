@@ -168,6 +168,7 @@ namespace BowlingTest
             Assert.AreEqual(95, _bowling.Score());
         }
 
+
         private void SetRollHistory(List<int> dictionary)
         {
             _rollHistory = dictionary;
