@@ -390,7 +390,33 @@ namespace BowlingTest
             Assert.AreEqual(273, _bowling.Score());
         }
 
-        
+        [TestMethod]
+        public void RollTwentyTwoBalls_CrashTest_ShouldGet155()
+        {
+            SetRollHistory(new List<int>()
+            {
+                5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,10,5
+            });
+
+            RollBalls(_rollHistory);
+
+            Assert.AreEqual(155, _bowling.Score());
+        }
+
+        [TestMethod]
+        public void RollTwentyTwoBalls_CrashTest_ShouldGet0()
+        {
+            SetRollHistory(new List<int>()
+            {
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10
+            });
+
+            RollBalls(_rollHistory);
+
+            Assert.AreEqual(0, _bowling.Score());
+        }
+
+
         private void SetRollHistory(List<int> dictionary)
         {
             _rollHistory = dictionary;
