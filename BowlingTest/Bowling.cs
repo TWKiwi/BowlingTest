@@ -49,11 +49,18 @@ namespace BowlingTest
                 _framesCount++;
                 _isFirstBall = false;
             }
+
+            if (_isFrameBonus)
+            {
+                _tempTotalScore = 0;
+                _framesCount++;
+                _isFirstBall = false;
+            }
         }
 
         private void StrikeBonusActivation()
         {
-            if (IsStrike())
+            if (IsStrike() && !_isFrameBonus)
             {
                 Frames[CurrentFrameIndex].StrikeBonusTimes += 2;
                 _isFirstBall = _isFrameBonus;
@@ -62,7 +69,7 @@ namespace BowlingTest
 
         private void SpireBonusActivation()
         {
-            if (IsSpire())
+            if (IsSpire() && !_isFrameBonus)
             {
                 Frames[CurrentFrameIndex].SpireBonusTimes++;
             }
@@ -83,7 +90,7 @@ namespace BowlingTest
             {
                 _isFrameBonus = true;
             }
-            else if (CurrentFrameIndex >= 10 && NoBonusChance())
+            else if (NoBonusChance())
             {
                 _youHaveNoChance = true;
             }
