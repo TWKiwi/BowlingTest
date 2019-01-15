@@ -8,8 +8,6 @@ namespace BowlingTest
         private int _framesCount;
         public List<Frame> Frames = new List<Frame>();
         private int _tempTotalScore;
-        private int _spireBonusTimes;
-        private int _strikeBonusTimes;
         private bool _isFirstBall;
         private bool _isFrameBonus;
         private bool _youHaveNoChance;
@@ -42,15 +40,14 @@ namespace BowlingTest
 
             if (IsSpire())
             {
-                _spireBonusTimes++;
+                Frames[CurrentFrameIndex].SpireBonusTimes++;
             }
 
             if (IsStrike())
             {
-                _strikeBonusTimes += 2;
+                Frames[CurrentFrameIndex].StrikeBonusTimes += 2;
                 _isFirstBall = false;
             }
-
 
             if (!_isFirstBall)
             {
@@ -64,11 +61,11 @@ namespace BowlingTest
 
         private void IsReachTheUpperLimit()
         {
-            if (CurrentFrameIndex >= 10 && _spireBonusTimes > 0)
+            if (CurrentFrameIndex >= 10 && Frames.Any(x => x.SpireBonusTimes > 0))
             {
                 _isFrameBonus = true;
             }
-            else if (CurrentFrameIndex >= 10 && _spireBonusTimes < 0 && _strikeBonusTimes < 0)
+            else if (CurrentFrameIndex >= 10 && Frames.Any(x => x.SpireBonusTimes < 0) && Frames.Any(x => x.StrikeBonusTimes < 0))
             {
                 _youHaveNoChance = true;
             }
@@ -87,17 +84,14 @@ namespace BowlingTest
             }
         }
 
-        private bool HasExistCompletedFrame()
-        {
-            return Frames.Any(x => x.IsCompleted);
-        }
-
         private void HasStrikeBonus(int score)
         {
-            if (_strikeBonusTimes > 0 && HasExistCompletedFrame())
+            var enumerable = Frames.Where(x => x.StrikeBonusTimes > 0);
+            var enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                Frames[CurrentFrameIndex - 1].Score += score;
-                _strikeBonusTimes--;
+                enumerator.Current.Score += score;
+                enumerator.Current.StrikeBonusTimes--;
             }
         }
 
@@ -113,10 +107,12 @@ namespace BowlingTest
 
         private void HasSpireBonus(int score)
         {
-            if (_spireBonusTimes > 0)
+            var enumerable = Frames.Where(x => x.SpireBonusTimes > 0);
+            var enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                Frames[CurrentFrameIndex - 1].Score += score;
-                _spireBonusTimes--;
+                enumerator.Current.Score += score;
+                enumerator.Current.SpireBonusTimes--;
             }
         }
 
@@ -145,5 +141,7 @@ namespace BowlingTest
     {
         public int Score;
         public bool IsCompleted;
+        public int StrikeBonusTimes { get; set; }
+        public int SpireBonusTimes { get; set; }
     }
 }
