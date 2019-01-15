@@ -56,7 +56,7 @@ namespace BowlingTest
             if (IsStrike())
             {
                 Frames[CurrentFrameIndex].StrikeBonusTimes += 2;
-                _isFirstBall = false;
+                _isFirstBall = _isFrameBonus;
             }
         }
 
@@ -73,6 +73,7 @@ namespace BowlingTest
             if (_isFrameBonus)
             {
                 _framesCount--;
+                Frames[CurrentFrameIndex].IsCompleted = false;
             }
         }
 
