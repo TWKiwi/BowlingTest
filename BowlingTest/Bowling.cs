@@ -5,14 +5,12 @@ namespace BowlingTest
 {
     public class Bowling
     {
-        private int _framesCount;
         public List<Frame> Frames = new List<Frame>();
-        private int _tempTotalScore;
+        private int _framesCount;
         private bool _isFirstBall;
         private bool _isFrameBonus;
+        private int _tempTotalScore;
         private bool _youHaveNoChance;
-
-        public int CurrentFrameIndex => _framesCount - 1;
 
         public Bowling()
         {
@@ -23,6 +21,7 @@ namespace BowlingTest
             }
         }
 
+        public int CurrentFrameIndex => _framesCount - 1;
         public void Roll(int score)
         {
             IsReachTheUpperLimit();
@@ -39,6 +38,11 @@ namespace BowlingTest
             CurrentFrameFinished();
         }
 
+        public int Score()
+        {
+            return UpdateTotalScore();
+        }
+
         private void CurrentFrameFinished()
         {
             if (!_isFirstBall)
@@ -51,23 +55,6 @@ namespace BowlingTest
             }
         }
 
-        private void StrikeBonusActivation()
-        {
-            if (IsStrike() && !_isFrameBonus)
-            {
-                Frames[CurrentFrameIndex].StrikeBonusTimes += 2;
-                _isFirstBall = _isFrameBonus;
-            }
-        }
-
-        private void SpireBonusActivation()
-        {
-            if (IsSpire() && !_isFrameBonus)
-            {
-                Frames[CurrentFrameIndex].SpireBonusTimes++;
-            }
-        }
-
         private void FrameBonusProcess()
         {
             if (_isFrameBonus)
@@ -75,6 +62,21 @@ namespace BowlingTest
                 _framesCount--;
                 Frames[CurrentFrameIndex].IsCompleted = false;
             }
+        }
+
+        private void FrameCompleted()
+        {
+            Frames[CurrentFrameIndex].IsCompleted = true;
+        }
+
+        private bool FrameUnCompleted()
+        {
+            return !Frames[CurrentFrameIndex].IsCompleted;
+        }
+
+        private bool HaveBonusChance()
+        {
+            return Frames.Any(x => x.SpireBonusTimes > 0 || x.StrikeBonusTimes > 0);
         }
 
         private void IsReachTheUpperLimit()
@@ -89,19 +91,24 @@ namespace BowlingTest
             }
         }
 
+        private bool IsSpire()
+        {
+            return _tempTotalScore == 10 && !_isFirstBall;
+        }
+
+        private bool IsStrike()
+        {
+            return _tempTotalScore == 10 && _isFirstBall;
+        }
+
         private bool NoBonusChance()
         {
             return Frames.Any(x => x.SpireBonusTimes == 0 && x.StrikeBonusTimes == 0);
         }
 
-        private bool HaveBonusChance()
+        private void SetUpCounter()
         {
-            return Frames.Any(x => x.SpireBonusTimes > 0 || x.StrikeBonusTimes > 0);
-        }
-
-        private void FrameCompleted()
-        {
-            Frames[CurrentFrameIndex].IsCompleted = true;
+            _isFirstBall = !_isFirstBall || _isFrameBonus;
         }
 
         private void SetUpScoreIntoCurrentFrame()
@@ -112,25 +119,12 @@ namespace BowlingTest
             }
         }
 
-        private void StrikeBonusProcess(int score)
+        private void SpireBonusActivation()
         {
-            var enumerable = Frames.Where(x => x.StrikeBonusTimes > 0);
-            var enumerator = enumerable.GetEnumerator();
-            while (enumerator.MoveNext())
+            if (IsSpire() && !_isFrameBonus)
             {
-                enumerator.Current.Score += score;
-                enumerator.Current.StrikeBonusTimes--;
+                Frames[CurrentFrameIndex].SpireBonusTimes++;
             }
-        }
-
-        private bool IsStrike()
-        {
-            return _tempTotalScore == 10 && _isFirstBall;
-        }
-
-        private void SetUpCounter()
-        {
-            _isFirstBall = !_isFirstBall || _isFrameBonus;
         }
 
         private void SpireBonusProcess(int score)
@@ -144,32 +138,35 @@ namespace BowlingTest
             }
         }
 
-        private bool IsSpire()
+        private void StrikeBonusActivation()
         {
-            return _tempTotalScore == 10 && !_isFirstBall;
+            if (IsStrike() && !_isFrameBonus)
+            {
+                Frames[CurrentFrameIndex].StrikeBonusTimes += 2;
+                _isFirstBall = _isFrameBonus;
+            }
         }
-
-        private bool FrameUnCompleted()
+        private void StrikeBonusProcess(int score)
         {
-            return !Frames[CurrentFrameIndex].IsCompleted;
+            var enumerable = Frames.Where(x => x.StrikeBonusTimes > 0);
+            var enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                enumerator.Current.Score += score;
+                enumerator.Current.StrikeBonusTimes--;
+            }
         }
-
         private int UpdateTotalScore()
         {
             return Frames.Sum(x => x.Score);
-        }
-
-        public int Score()
-        {
-            return UpdateTotalScore();
         }
     }
 
     public class Frame
     {
-        public int Score;
         public bool IsCompleted;
-        public int StrikeBonusTimes { get; set; }
+        public int Score;
         public int SpireBonusTimes { get; set; }
+        public int StrikeBonusTimes { get; set; }
     }
 }
